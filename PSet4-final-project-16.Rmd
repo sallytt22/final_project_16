@@ -1,0 +1,144 @@
+---
+author: Final Project 16 
+title: "EDAV Fall 2020 PSet 4"
+output: html_document
+---
+
+This assignment is designed to help you get started on the final project. Be sure to review the final project instructions (https://edav.info/project.html).
+    
+### 1. The Team
+
+[8 points]
+
+a) Who's on the team? (Include names and UNIs)
+
+- Sally Bao: tb2906
+- Eric Cheng: yc3418
+- Qiran Li: ql2397
+- Zhibin Li: zl2937
+
+b) How do you plan to divide up the work? (Grading is on a group basis. The point of asking is to encourage you to think about this and design a plan.)
+
+- Data collection: Sally 
+- Data pre-processing: Eric
+- Data analysis leaders: Qiran and Zhibin
+- Bookdown reports: Sally and Eric 
+
+
+c) What is your plan for managing the git/GitHub workflow? That is, who will merge pull requests? How will you attempt to avoid conflicts? How will you communicate?
+
+- merge PR leader: Sally 
+- merge PR helper: Eric
+
+Sally and Eric used to be bookdown -- merge PR leader and helper, so they would be able to keep track of all the PRs from different contributors, check/comment before merging PR, and resolve potential merge conflicts. Four contributors would communicate by using Zoom for group meeting and Github actions: Reviewers, Assignees, Labels and Linked issues so that everyone contributor would access the up-to-date version of the final project.
+
+
+### 2. The Questions
+
+[10 points]
+
+List three questions that you hope you will be able to answer from your research. (It's ok if these change as your work progresses.)
+
+a)  What's the general correlation between social media engagement (e.g. Facebook engagement) and fake news generation between 2016 to 2019?
+
+  
+b)  How does social media engagement (e.g. Facebook engagement) effect fake news generation in 2020?  
+  
+  
+c)  How does fake news sites plus social media engagment effect the U.S. election and COVID-19 situation in 2020?
+  
+
+### 3. GitHub repo
+
+[8 points]
+
+a) Set up your final project repository following the EDAVproject template. Provide the link to the repo.
+
+
+b) Make sure that all team members have write access to the repository and have practiced making contributions. Provide a link to the contributors page of your repository showing that all team members have made contributions to the repo (Note that we do not have the ability to see who has write access, only contributors):
+
+https://github.com/sallytt22/final_project_16/graphs/contributors
+
+### 4. Data Sources
+
+[8 points]
+
+Write a draft of the [Data Sources chapter](https://edav.info/project#report-format).
+
+Sally is reponsible for collecting the data. 
+
+As our project is to analyze the relationship between social media engagement and fake news among different catoegories, we collect our fake news site data from [LeadStories](https://leadstories.com/), a web-based fact-checking platform that identifies false or misleading stories, rumors, and conspiracies by using its Trendolizer technology. Also, social media engagement data comes from [BuzzSumo](https://buzzsumo.com/), a content research tool that retrieves social media engagement (such as Facebook engagement and Twitter shares) counts by simply entering domains or keywords. Due to few counts of Twitter shares, we decide to treat Facebook engagement as our main social media engagement feature.
+
+Our goal is to collect annual top 50 fake-news articles from 2016 to 2020 along with the following feature columns:
+
+- `title`: Title of the fake news
+
+- `url`: The url of this piece of news
+
+- `month`: Month of the year the news released
+
+- `fb_engagement`: The sum of likes, shares, and comments of this piece of news on Facebook
+
+- `twitter_shares`: The number of share on Twitter
+
+- `category`: what category this piece of news belongs to
+
+We would have five datasets represent 2016, 2017, 2018, 2019 and 2020. For each dataset, we have 50 rows and 5 columns.
+
+
+By now, we've encountered the issue with social media engagement feature that whether we should take several social media tools (e.g. the sum of # of fb_engagement, # of twitter_shares, and # of likes from instagram) into account or just one (e.g. only # of fb_engagement). We expect to have more discussion on that, but, by now, we decide to rank the top 50 fake news with the highest # of fb_engagement.
+
+
+
+### 5. Data Transformation
+
+[8 points]
+
+Write a draft of the [Data Transformation chapter](https://edav.info/project#report-format)
+
+We use read.csv() to read data of fake news site for each year from 2016 to 2018. 
+
+```{r}
+#df16<- read.csv("sites_2016.csv")
+#df17<-read.csv("sites_2017.csv")
+#df18<-read.csv("sites_2018.csv")
+#df19<-read.csv("sites_2019.csv")
+#df20<-read.csv("sites_2020.csv")
+```
+Since the csv files are already in the form that we can directly use in R. We just need to check if there is any duplicate data in this dataset and then we can do our data analysis.
+```{r}
+#df16[duplicated(df16)]
+```
+
+We use read.csv() to read data of top fake news site in 2018. It is also in the form that we can directly use in R. We just need to check if there is any duplicate data in this dataset and then we can do our data analysis. 
+```{r}
+#library(tidyverse)
+#dftop <- read.csv("top_2018.csv")
+#dftop[duplicated(dftop)]
+```
+For example, if we want to find out the most popular fake news category, we just need extract the category column.
+```{r}
+#dftop["category"]
+```
+
+### 6. Missing Values
+
+[8 points]
+
+Write a draft of the [Missing Values chapter](https://edav.info/project#report-format)
+
+Most missing values comes from `category ` and `twitter_share` column.
+
+We create heatmaps to analyze missing values and check whether a pattern exists for missing values and the ratio of missing values in each column. 
+
+```{r}
+library(heatmaply)
+dftop_18 <- read.csv("top_2016.csv")
+heatmaply_na(
+  dftop_18[1:30, ],
+  xlab = 'Features',
+  colors=viridis(100),
+  showticklabels = c(TRUE, FALSE),
+  key.title = 'NA ratio'
+)
+```
